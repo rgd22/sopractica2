@@ -26,6 +26,7 @@
 #include <sys/types.h>
 #include <strings.h>
 #include <unistd.h>
+#include <netdb.h>
 
 #define PORT 9999
 #define BACKLOG 200
@@ -36,45 +37,40 @@ int main(){
 	
 	struct sockaddr_in server;
 	struct sockaddr_in client; 
-	int conexion,conexion2;
-	int conexion3;
-	int sin_size;
-	char comandoRemoto[MAXLEN];
+	int serverfd;
+	int clientfd;
 	int fd_lectura;
-	
+	int tuberia[2];
+	char comandoRemoto[MAXLEN];
+	char hostname_client[MAXLEN];
+	pid_t hijo;
+
 	server.sin_family = AF_INET; 
 	server.sin_port = htons(PORT);
 	server.sin_addr.s_addr = INADDR_ANY;
 	bzero(&(server.sin_zero),8);
 	
-	conexion = socket(AF_INET,SOCK_STREAM,0);
+	serverfd = socket(AF_INET,SOCK_STREAM,0);
 	
-	if (bind(conexion,(struct sockaddr*)&server, sizeof (struct sockaddr)) == -1) perror(TEXT_ERROR);
+	if (bind(serverfd,(struct sockaddr*)&server, sizeof (struct sockaddr)) == -1) perror(TEXT_ERROR);
 	
-	if(listen(conexion,BACKLOG) == -1) {  /* llamada a listen() */
-      printf("error en listen()\n");
-      exit(-1);
-   }
+	if(listen(serverfd,BACKLOG) == -1) perror(TEXT_ERROR);
+	
+	
    while(1) {
-      sin_size=sizeof(struct sockaddr_in);
-      /* A continuación la llamada a accept() */
-      if ((conexion2 = accept(conexion,(struct sockaddr *)&client,&sin_size))==-1){
-         printf("error en accept()\n");
-         exit(-1);
-      }
-	   printf("Se obtuvo una conexión desde %s\n",(char*)inet_ntoa(client.sin_addr) ); 
-	   send(conexion2,"Bienvenido a mi servidor.\n",40,0); 
-	   /* que enviará el mensaje de bienvenida al cliente */
+		int sin_size=sizeof(struct sockaddr_in);
 		  
-		 
-			fd_lectura=recv(conexion2,comandoRemoto,sizeof(comandoRemoto),0);
-		  comandoRemoto[fd_lectura]='\0';
-		  printf("Bytes recibidos: %dB\n",fd_lectura);
-		  printf("Comando recibido: %s\n",comandoRemoto);
-		pid_t hijo;
-		int tuberia[2];
-		pipe(tuberia);
+		if ((clientfd = accept(serverfd,(struct sockaddr *)&client,&sin_size))==-1) perror(TEXT_ERROR);
 		
+		getnameinfo((struct sockaddr *) &client, sizeof(client), hostname_client, sizeof(hostname_client), NULL, 0, NI_NAMEREQD);
+		printf(">> Conexion entrante: IP %s (%s)\n",(char*)inet_ntoa(client.sin_addr),hostname_client); 
+		send(clientfd,"Connected",sizeof("Connected"),0);
+		pipe(tuberia);
+		fd_lectura=recv(clientfd,comandoRemoto,sizeof(comandoRemoto),0);
+		comandoRemoto[fd_lectura]='\0';
+		printf(">> Comando recibido: %s\n",comandoRemoto);
+		printf(">> Ejecutando %s...\n",comandoRemoto);
+
 		hijo=fork();
 		if(hijo==0){ //hijo
 			close(tuberia[0]);
@@ -86,10 +82,7 @@ int main(){
 			char buffer[5000]={0};
 			close(tuberia[1]);
 			while(read(tuberia[0],buffer,sizeof(buffer))!=0);
-			send(conexion2,buffer,sizeof(buffer),0);
-			
+			send(clientfd,buffer,sizeof(buffer),0);
 		}
-		
 	}
 }
-//int crear_conexion(
