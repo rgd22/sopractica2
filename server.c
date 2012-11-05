@@ -24,10 +24,13 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <sys/types.h>
+#include <strings.h>
+#include <unistd.h>
 
 #define PORT 9999
 #define BACKLOG 200
 #define MAXLEN 850
+#define TEXT_ERROR "Error en el servidor"
 
 int main(){
 	
@@ -46,10 +49,8 @@ int main(){
 	
 	conexion = socket(AF_INET,SOCK_STREAM,0);
 	
-	if (bind(conexion,(struct sockaddr*)&server, sizeof (struct sockaddr)) == -1) 
-	{ 
-		printf ("Error en el bind\n"); 
-	}
+	if (bind(conexion,(struct sockaddr*)&server, sizeof (struct sockaddr)) == -1) perror(TEXT_ERROR);
+	
 	if(listen(conexion,BACKLOG) == -1) {  /* llamada a listen() */
       printf("error en listen()\n");
       exit(-1);
@@ -61,7 +62,7 @@ int main(){
          printf("error en accept()\n");
          exit(-1);
       }
-	   printf("Se obtuvo una conexión desde %s\n",inet_ntoa(client.sin_addr) ); 
+	   printf("Se obtuvo una conexión desde %s\n",(char*)inet_ntoa(client.sin_addr) ); 
 	   send(conexion2,"Bienvenido a mi servidor.\n",40,0); 
 	   /* que enviará el mensaje de bienvenida al cliente */
 		  
@@ -91,3 +92,4 @@ int main(){
 		
 	}
 }
+//int crear_conexion(
