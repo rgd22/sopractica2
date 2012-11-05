@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Sopractica2 : Servidor-Cliente con sockets C" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Sopractica2</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/obus08/sopractica2">View on GitHub</a>
+
+          <h1 id="project_title">Sopractica2</h1>
+          <h2 id="project_tagline">Servidor-Cliente con sockets C</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/obus08/sopractica2/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/obus08/sopractica2/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <p>Implementar una aplicación cliente-servidor mediante la utilización de sockets cuya
+funcionalidad será la ejecución remota de comandos sin parámetros. El ejercicio
+constará de dos partes (procesos): el cliente que enviará el comando a ejecutar al
+servidor y el servidor que recibirá la petición desde el cliente, ejecutará el comando y
+devolverá los resultados al cliente.</p>
+
+<p>El cliente se ejecutará en la máquina local y su función es establecer la comunicación
+con el servidor, enviar al servidor el comando y mostrar los resultados. Para ello, el
+usuario escribirá en el prompt el comando:</p>
+
+<p>ClienteRemoto IP_Servidor Comando</p>
+
+<p>El servidor se lanzará con la orden ServidorRemoto y debe estar en todo momento
+escuchando por el puerto 9999, preparado para aceptar conexiones. Tras una petición de
+conexión por parte de un cliente, debe crear un hijo que será el encargado de realizar
+todas las operaciones necesarias relacionadas con la ejecución de comando solicitado
+por el cliente.</p>
+
+<p>La puntuación del ejercicio será la siguiente:
+• Implementación correcta del cliente y su estructura. (1 punto)
+• Implementación correcta del servidor y su estructura. (1 punto)
+• Ejecución remota de comandos. (4 puntos)</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Sopractica2 maintained by <a href="https://github.com/obus08">obus08</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
