@@ -1,0 +1,67 @@
+const int N = 10;
+const int true=1;
+const
+   int RED   = 1; int BLACK   = 2; int BLUE  = 3; int YELLOW = 4;
+   int GREEN = 5; int MAGENTA = 6; int WHITE = 7;
+   int CIRCLE = 1; int LINE = 2; int RECTANGLE = 3; int TRIANGLE = 4;
+
+semaphore maquina;
+semaphore robot;
+semaphore s;
+
+int contador = 0;
+
+void depositar(){
+	while(true){
+	p(maquina);
+	p(s);
+	contador++;
+	//dejar cinta
+	cout << "Maquina: deposito item. Cantidad: " << contador << endl;
+	v(s);
+	v(robot);
+	}
+}
+
+void retirar(){
+	while(true){
+		p(robot);
+		p(s);
+		contador--;
+		//retirar cinta
+		cout << "Robot: retiro item. Cantidad: " << contador << endl;
+		v(s);
+		v(maquina);
+		}
+}
+
+void operario(){
+	while(true){
+		p(s);
+		cout << "Operario a mirar" << endl;
+		if(contador>=3){
+			contador=contador-3;
+			cout << "Operario retirando 3 piezas, hay " << contador << endl;
+			p(robot);p(robot);p(robot);
+			v(maquina);v(maquina);v(maquina);
+		}
+		v(s);
+	}
+}
+
+int main(){
+
+	create(1000, RECTANGLE, BLACK, 50, 120, 550, 120);
+	create(0, CIRCLE, WHITE, 70, 135, 200, 200);
+
+	initialsem(s, 1);
+	initialsem(maquina, N);
+	initialsem(robot, 0);
+
+	cobegin{
+		depositar();
+		retirar();
+		operario();
+	}
+
+}
